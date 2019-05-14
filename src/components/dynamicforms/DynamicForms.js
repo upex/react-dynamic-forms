@@ -54,18 +54,18 @@ function DynamicForms(props) {
         });
 
         input = <select value={values[field.key] ? values[field.key] : values[field.key] = ''}
-          onChange={(e)=>{props.onChange(e, field.key)}}>{input}</select>;
+          onChange={(e)=>{props.onChange(e, field.key)}}>
+          <option value="">Seletc {field.label}</option>
+          {input}</select>;
     }
     if (field.type === "checkbox") {
       input = field.options.map((o) => {
-          
-          //let checked = o.value == value;
           let checked = false;
           if (values[field.key] && values[field.key].length > 0) {
               checked = values[field.key].indexOf(o.value) > -1 ? true: false;
           }
            return (
-              <React.Fragment key={"cfr" + o.key}>
+              <div key={field.key+o.key}>
                   <input
                       className="form-input"
                       type={field.type}
@@ -75,18 +75,21 @@ function DynamicForms(props) {
                       value={o.value}
                       onChange={(e)=>{props.onChange(e, field.key, "multiple")}}
                   />
-                  <label key={"ll" +o.key }>{o.label}</label>
-              </React.Fragment>
+                  <label>{o.label}</label>
+              </div>
            );
       });
-
       input = <div className ="form-group-checkbox">{input}</div>;
-
    }
 
     return (
-          <div key={field.key}>
-            {input}
+          <div key={'g' + field.key} className="form-group">
+              <label className="form-label"
+                  key={"l" + field.key}
+                  htmlFor={field.key}>
+                  {field.label}
+              </label>
+              {input}
           </div>
         )
   });
@@ -95,7 +98,7 @@ function DynamicForms(props) {
     <h1>{props.title}</h1>
     <form onSubmit={props.onSubmit}>
     {formUi}
-    {props.children ? this.children : (<div>
+    {props.children ? props.children : (<div>
       <button disabled={props.isSubmitting} type="submit">
         Submit
       </button>

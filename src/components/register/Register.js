@@ -6,16 +6,24 @@ import DynamicForms from "../dynamicforms/DynamicForms";
 
 function Register() {
 
+  const validateRules = {
+    required: value => !!value || 'Required.',
+    min: v => v.length >= 6 || 'Enter password of minnimum 6 characters'
+  }
+
   const [formModel, setFormModel] = useState([
       {
         key: 'email',
         type: 'email',
-        placeholder: 'Enter email'
+        placeholder: 'Enter email',
+        label: 'Email'
       },
       {
         key: 'password',
         type: 'password',
-        placeholder: 'Enter password of minnimum 6 characters'
+        placeholder: 'Enter password of minnimum 6 characters',
+        label: 'Password',
+        rules: [validateRules.required, validateRules.min]
       },
       {key: "gender",label: "Gender", type:"radio",options:[
         {key:"male",label:"Male",name:"gender",value:"male"},
@@ -32,7 +40,7 @@ function Register() {
         {key:"vuejs",label:"VueJS",value:"vuejs"},
       ]}
     ]);
-  const [INITIAL_STATE, setInitialState] = useState({gender: 'male'})
+  const [INITIAL_STATE, setInitialState] = useState({})
   const {
     handleSubmit,
     handleChange,
@@ -40,7 +48,7 @@ function Register() {
     values,
     errors,
     isSubmitting
-  } = useFormValidation(INITIAL_STATE, validateAuth, registerUser);
+  } = useFormValidation(INITIAL_STATE, validateAuth, registerUser, formModel);
 
   useEffect(() => {
     getPosts();
@@ -70,7 +78,7 @@ function Register() {
         tmpModel.forEach(item=> {
           tmpObj[item.key] = '';
         });
-        setInitialState(tmpObj);
+        setInitialState({...tmpObj});
       });
   };
   return (
@@ -84,7 +92,13 @@ function Register() {
       errors={errors}
       onSubmit={handleSubmit}
       isSubmitting={isSubmitting}
-      />
+      >
+      <div>
+        <button disabled={isSubmitting} type="submit">
+            Submit children
+        </button>
+      </div>
+      </DynamicForms>
     </div>
   );
 }

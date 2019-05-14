@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
 
-function useFormValidation(initialState, validate, callback) {
+function useFormValidation(initialState, validate, callback, model) {
 
   const [values, setValues] = useState(initialState);
   const [errors, setErrors] = useState({});
@@ -19,34 +19,35 @@ function useFormValidation(initialState, validate, callback) {
     }
   }, [errors]);
 
-  function handleChange(event, name, type='single') {
+  function handleChange(event, key, type='single') {
     if (type === 'single') {
       setValues({
         ...values,
-        [name]: event.target.value
+        [key]: event.target.value
       });
     } else {
       // Array of values (e.g. checkbox)
-      let found = values[name] ?  
-      values[name].find ((d) => d === event.target.value) : false; 
+      let found = values[key] ?  
+      values[key].find ((d) => d === event.target.value) : false;
       if (found) {
-          let data = values[name].filter((d) => {
+          let data = values[key].filter((d) => {
               return d !== found;
           });
           setValues({
             ...values,
-            [name]: data
+            [key]: data
           });
       } else {
           setValues({
-            [name]: [event.target.value, ...values[name]]
+            ...values,
+            [key]: [event.target.value, ...values[key]]
           });
       }
     }
   }
 
   function handleErrors() {
-    const validationErrors = validate(values);
+    const validationErrors = validate(model, values);
     setErrors(validationErrors);
   }
 
