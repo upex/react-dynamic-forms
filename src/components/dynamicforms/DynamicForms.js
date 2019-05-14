@@ -40,7 +40,8 @@ function DynamicForms(props) {
                </div>
            );
       });
-      input = <div className ="form-group-radio">{input}</div>;
+      input = <div className ="form-group-radio">{input}
+      { props.errors[field.key] && <p className="error-text">{props.errors[field.key]}</p> }</div>;
    }
    if (field.type === "select") {
         input = field.options.map((o) => {
@@ -53,10 +54,11 @@ function DynamicForms(props) {
             );
         });
 
-        input = <select value={values[field.key] ? values[field.key] : values[field.key] = ''}
+        input = <div><select value={values[field.key] ? values[field.key] : values[field.key] = ''}
           onChange={(e)=>{props.onChange(e, field.key)}}>
           <option value="">Seletc {field.label}</option>
-          {input}</select>;
+          {input}</select>{ props.errors[field.key] && <p className="error-text">{props.errors[field.key]}</p> }</div>
+
     }
     if (field.type === "checkbox") {
       input = field.options.map((o) => {
@@ -79,7 +81,8 @@ function DynamicForms(props) {
               </div>
            );
       });
-      input = <div className ="form-group-checkbox">{input}</div>;
+      input = <div className ="form-group-checkbox">{input}
+      { props.errors[field.key] && <p className="error-text">{props.errors[field.key]}</p> }</div>;
    }
 
     return (

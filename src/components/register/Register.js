@@ -8,7 +8,8 @@ function Register() {
 
   const validateRules = {
     required: value => !!value || 'Required.',
-    min: v => v.length >= 6 || 'Enter password of minnimum 6 characters'
+    min: v => (v && v.length >= 6) || 'Enter password of minnimum 6 characters',
+    emailValidate: v => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(v) || 'Invalid email address'
   }
 
   const [formModel, setFormModel] = useState([
@@ -16,7 +17,8 @@ function Register() {
         key: 'email',
         type: 'email',
         placeholder: 'Enter email',
-        label: 'Email'
+        label: 'Email',
+        rules: [validateRules.required, validateRules.emailValidate]
       },
       {
         key: 'password',
@@ -27,18 +29,22 @@ function Register() {
       },
       {key: "gender",label: "Gender", type:"radio",options:[
         {key:"male",label:"Male",name:"gender",value:"male"},
-        {key:"female",label:"Female",name: "gender",value:"female"}
-      ]},
+        {key:"female",label:"Female",name: "gender",value:"female"},
+      ],
+      rules: [validateRules.required]
+      },
       {key: "city",label:"City", type:"select", value: "Kerala", options: [
         {key:"mumbai",label:"Mumbai",value:"Mumbai"},
         {key:"bangalore",label:"Bangalore",value:"Bangalore"},
         {key:"kerala",label:"Kerala",value:"Kerala"},
-      ]},
+      ],
+      rules: [validateRules.required]
+    },
       {key: "skills",label:"Skills", type:"checkbox", options: [
         {key:"reactjs",label:"ReactJS",value:"reactjs"},
         {key:"angular",label:"Angular",value:"angular"},
         {key:"vuejs",label:"VueJS",value:"vuejs"},
-      ]}
+      ], rules: [validateRules.required]}
     ]);
   const [INITIAL_STATE, setInitialState] = useState({})
   const {
