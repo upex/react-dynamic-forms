@@ -19,11 +19,30 @@ function useFormValidation(initialState, validate, callback) {
     }
   }, [errors]);
 
-  function handleChange(event) {
-    setValues({
-      ...values,
-      [event.target.name]: event.target.value
-    });
+  function handleChange(event, name, type='single') {
+    if (type === 'single') {
+      setValues({
+        ...values,
+        [name]: event.target.value
+      });
+    } else {
+      // Array of values (e.g. checkbox)
+      let found = values[name] ?  
+      values[name].find ((d) => d === event.target.value) : false; 
+      if (found) {
+          let data = values[name].filter((d) => {
+              return d !== found;
+          });
+          setValues({
+            ...values,
+            [name]: data
+          });
+      } else {
+          setValues({
+            [name]: [event.target.value, ...values[name]]
+          });
+      }
+    }
   }
 
   function handleErrors() {

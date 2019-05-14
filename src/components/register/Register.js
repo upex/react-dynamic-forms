@@ -8,20 +8,31 @@ function Register() {
 
   const [formModel, setFormModel] = useState([
       {
-        name: 'email',
+        key: 'email',
         type: 'email',
         placeholder: 'Enter email'
       },
       {
-        name: 'password',
+        key: 'password',
         type: 'password',
         placeholder: 'Enter password of minnimum 6 characters'
-      }
+      },
+      {key: "gender",label: "Gender", type:"radio",options:[
+        {key:"male",label:"Male",name:"gender",value:"male"},
+        {key:"female",label:"Female",name: "gender",value:"female"}
+      ]},
+      {key: "city",label:"City", type:"select", value: "Kerala", options: [
+        {key:"mumbai",label:"Mumbai",value:"Mumbai"},
+        {key:"bangalore",label:"Bangalore",value:"Bangalore"},
+        {key:"kerala",label:"Kerala",value:"Kerala"},
+      ]},
+      {key: "skills",label:"Skills", type:"checkbox", options: [
+        {key:"reactjs",label:"ReactJS",value:"reactjs"},
+        {key:"angular",label:"Angular",value:"angular"},
+        {key:"vuejs",label:"VueJS",value:"vuejs"},
+      ]}
     ]);
-  const INITIAL_STATE = {};
-  formModel.forEach(item=> {
-    INITIAL_STATE[item.name] = '';
-  });
+  const [INITIAL_STATE, setInitialState] = useState({gender: 'male'})
   const {
     handleSubmit,
     handleChange,
@@ -36,9 +47,8 @@ function Register() {
   }, [])
 
   function registerUser() {
-    const { email, password } = values;
     /** Call api */
-    console.log('Authenticated=>', email, password);
+    console.log('Authenticated=>', values);
   }
 
   function getPosts() {
@@ -48,15 +58,21 @@ function Register() {
         const tmpModel = [...formModel]
         tmpModel.push(
           {
-            name: 'username',
+            key: 'username',
             type: 'username',
             placeholder: 'Enter username'
           }
         );
         setFormModel(tmpModel);
+        const tmpObj = {
+          ...INITIAL_STATE
+        }
+        tmpModel.forEach(item=> {
+          tmpObj[item.key] = '';
+        });
+        setInitialState(tmpObj);
       });
   };
-
   return (
     <div className="container">
       <DynamicForms
