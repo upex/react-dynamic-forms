@@ -1,7 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
-import useFormValidation from "../../utils/useFormValidation";
-import validateAuth from "../../utils/validateAuth";
 import DynamicForms from "../dynamicforms/DynamicForms";
 
 function Register() {
@@ -14,53 +12,43 @@ function Register() {
 
   const [formModel, setFormModel] = useState([
       {
-        key: 'email',
+        uniquekey: 'email',
         type: 'email',
         placeholder: 'Enter email',
         label: 'Email',
         rules: [validateRules.required, validateRules.emailValidate]
       },
       {
-        key: 'password',
+        uniquekey: 'password',
         type: 'password',
         placeholder: 'Enter password of minnimum 6 characters',
         label: 'Password',
         rules: [validateRules.required, validateRules.min]
       },
-      {key: "gender",label: "Gender", type:"radio",options:[
-        {key:"male",label:"Male",name:"gender",value:"male"},
-        {key:"female",label:"Female",name: "gender",value:"female"},
+      {uniquekey: "gender",label: "Gender", type:"radio",options:[
+        {uniquekey:"male",label:"Male",name:"gender",value:"male"},
+        {uniquekey:"female",label:"Female",name: "gender",value:"female"},
       ],
       rules: [validateRules.required]
       },
-      {key: "city",label:"City", type:"select", value: "Kerala", options: [
-        {key:"mumbai",label:"Mumbai",value:"Mumbai"},
-        {key:"bangalore",label:"Bangalore",value:"Bangalore"},
-        {key:"kerala",label:"Kerala",value:"Kerala"},
+      {uniquekey: "city",label:"City", type:"select", value: "Kerala", options: [
+        {uniquekey:"mumbai",label:"Mumbai",value:"Mumbai"},
+        {uniquekey:"bangalore",label:"Bangalore",value:"Bangalore"},
+        {uniquekey:"kerala",label:"Kerala",value:"Kerala"},
       ],
       rules: [validateRules.required]
     },
-      {key: "skills",label:"Skills", type:"checkbox", options: [
-        {key:"reactjs",label:"ReactJS",value:"reactjs"},
-        {key:"angular",label:"Angular",value:"angular"},
-        {key:"vuejs",label:"VueJS",value:"vuejs"},
+      {uniquekey: "skills",label:"Skills", type:"checkbox", options: [
+        {uniquekey:"reactjs",label:"ReactJS",value:"reactjs"},
+        {uniquekey:"angular",label:"Angular",value:"angular"},
+        {uniquekey:"vuejs",label:"VueJS",value:"vuejs"},
       ], rules: [validateRules.required]}
     ]);
-  const [INITIAL_STATE, setInitialState] = useState({})
-  const {
-    handleSubmit,
-    handleChange,
-    handleBlur,
-    values,
-    errors,
-    isSubmitting
-  } = useFormValidation(INITIAL_STATE, validateAuth, registerUser, formModel);
-
   useEffect(() => {
     getPosts();
   }, [])
 
-  function registerUser() {
+  function registerUser(values) {
     /** Call api */
     console.log('Authenticated=>', values);
   }
@@ -69,22 +57,15 @@ function Register() {
       fetch('https://jsonplaceholder.typicode.com/posts')
       .then(response => response.json())
       .then(json => {
-        const tmpModel = [...formModel]
+        const tmpModel = [...formModel];
         tmpModel.push(
           {
-            key: 'username',
-            type: 'username',
+            uniquekey: 'username',
+            type: 'text',
             placeholder: 'Enter username'
           }
         );
         setFormModel(tmpModel);
-        const tmpObj = {
-          ...INITIAL_STATE
-        }
-        tmpModel.forEach(item=> {
-          tmpObj[item.key] = '';
-        });
-        setInitialState({...tmpObj});
       });
   };
   return (
@@ -92,19 +73,8 @@ function Register() {
       <DynamicForms
       title="Register Here"
       model={formModel}
-      values={values}
-      onChange={handleChange}
-      onBlur={handleBlur}
-      errors={errors}
-      onSubmit={handleSubmit}
-      isSubmitting={isSubmitting}
-      >
-      <div>
-        <button disabled={isSubmitting} type="submit">
-            Submit children
-        </button>
-      </div>
-      </DynamicForms>
+      registerUser={registerUser}
+      />
     </div>
   );
 }

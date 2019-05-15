@@ -4,9 +4,9 @@ export default function validateAuth(model, values) {
     model.forEach(item=> {
       if(item.rules && item.rules.length) {
         for (let key in item.rules) {
-          const check = item.rules[key](values[item.key]);
+          const check = item.rules[key](values[item.uniquekey]);
           if (check && typeof check === 'string') {
-            errors[item.key] = check;
+            errors[item.uniquekey] = check;
             break;
           }
         }

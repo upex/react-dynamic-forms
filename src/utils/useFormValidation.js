@@ -11,7 +11,7 @@ function useFormValidation(initialState, validate, callback, model) {
     if (isSubmitting) {
       const noErrors = Object.keys(errors).length === 0;
       if (noErrors) {
-        callback();
+        callback(values);
         setSubmitting(false);
       } else {
         setSubmitting(false);
@@ -38,9 +38,10 @@ function useFormValidation(initialState, validate, callback, model) {
             [key]: data
           });
       } else {
+          const val = values[key] ? values[key] : '';
           setValues({
             ...values,
-            [key]: [event.target.value, ...values[key]]
+            [key]: [event.target.value, ...val]
           });
       }
     }

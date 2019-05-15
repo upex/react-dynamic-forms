@@ -1,113 +1,125 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
+import useFormValidation from "../../utils/useFormValidation";
+import validateAuth from "../../utils/validateAuth";
+import InputField from '../inputfield/InputField';
 
 function DynamicForms(props) {
-  const [models, setModels] = useState(props.model || []);
-  const [values, setValues] = useState(props.values || {});
-  useEffect(() => {
-    setModels(props.model);
-  }, [props.model])
+    const [models, setModels] = useState(props.model || []);
+    const [INITIAL_STATE, setInitialState] = useState({})
+    const {
+      handleSubmit,
+      handleChange,
+      handleBlur,
+      values,
+      errors,
+      isSubmitting
+    } = useFormValidation(INITIAL_STATE, validateAuth, props.registerUser, models);
 
-  useEffect(() => {
-    setValues(props.values);
-  }, [props.values])
-
-  const formUi = models.map((field) => {
-    let input = <><input
-        onChange={(e) => props.onChange(e, field.key, 'single')}
-        onBlur={props.onBlur}
-        name={field.key}
-        value={values[field.key] ? values[field.key] : values[field.key] = ''}
-        type={field.type}
-        className={props.errors[field.key] && "error-input"}
-        placeholder={field.placeholder}
-      />
-     { props.errors[field.key] && <p className="error-text">{props.errors[field.key]}</p> }</>
-     if (field.type === "radio") {
-      input = field.options.map((o) => {
-           let checked = o.value === values[o.name];
-           return (
-               <div key={field.key+o.key}>
-                   <input
-                    className="form-input"
-                    type={field.type}
-                    key={o.key}
-                    name={o.name}
-                    checked={checked}
-                    value={o.value}
-                    onChange={(e)=>{props.onChange(e, o.name)}}
-                   />
-                   <label>{o.label}</label>
-               </div>
-           );
-      });
-      input = <div className ="form-group-radio">{input}
-      { props.errors[field.key] && <p className="error-text">{props.errors[field.key]}</p> }</div>;
-   }
-   if (field.type === "select") {
-        input = field.options.map((o) => {
-            return (
-              <option
-                  className="form-input"
-                  key={o.key}
-                  value={o.value}
-              >{o.value}</option>
-            );
+    useEffect(() => {
+        setModels(props.model);
+        const tmpObj = {
+            ...INITIAL_STATE
+        }
+        models.forEach(item=> {
+            tmpObj[item.uniquekey] = '';
         });
+        setInitialState({...tmpObj});
+    }, [props.model])
+     
+    function renderForm() {
+        const formUI = models.map((field) => {
+                const allProps = {
+                    handleChange,
+                    handleBlur,
+                    values,
+                    errors,
+                    ...field
+                };
+                let input = <InputField
+                key={field.uniquekey}
+                { ...allProps }
+                field={field}/>
+                    if (field.type === "radio") {
+                        input = field.options.map((o) => {
+                            let checked = o.value === values[o.name];
+                            return ( <div key = { field.uniquekey + o.uniquekey } >
+                                <input className = "form-input"
+                                type = { field.type }
+                                key = { o.uniquekey }
+                                name = { o.name }
+                                checked = { checked }
+                                value = { o.value }
+                                onChange = {
+                                    (e) => { handleChange(e, field.uniquekey) }
+                                }
+                                /> <label> { o.label } </label> </div>
+                            );
+                        });
+                        input = <div className = "form-group-radio" > { input } {
+                            errors[field.uniquekey] && < p className = "error-text" > { errors[field.uniquekey] } </p> }</div> ;
+                        }
+                        if (field.type === "select") {
+                            input = field.options.map((o) => {
+                                return ( < option className = "form-input"
+                                    key = { o.uniquekey }
+                                    value = { o.value } > { o.value } </option>
+                                );
+                            });
 
-        input = <div><select value={values[field.key] ? values[field.key] : values[field.key] = ''}
-          onChange={(e)=>{props.onChange(e, field.key)}}>
-          <option value="">Seletc {field.label}</option>
-          {input}</select>{ props.errors[field.key] && <p className="error-text">{props.errors[field.key]}</p> }</div>
+                            input = <div > < select value = { values[field.uniquekey] ? values[field.uniquekey] : values[field.uniquekey] = '' }
+                            onChange = {
+                                    (e) => { handleChange(e, field.uniquekey) }
+                                } >
+                                <
+                                option value = "" > Seletc { field.label } </option> { input } </select > {
+                                    errors[field.uniquekey] && < p className = "error-text" > { errors[field.uniquekey] } </p >
+                                } </div>
 
-    }
-    if (field.type === "checkbox") {
-      input = field.options.map((o) => {
-          let checked = false;
-          if (values[field.key] && values[field.key].length > 0) {
-              checked = values[field.key].indexOf(o.value) > -1 ? true: false;
-          }
-           return (
-              <div key={field.key+o.key}>
-                  <input
-                      className="form-input"
-                      type={field.type}
-                      key={o.key}
-                      name={o.key}
-                      checked={checked}
-                      value={o.value}
-                      onChange={(e)=>{props.onChange(e, field.key, "multiple")}}
-                  />
-                  <label>{o.label}</label>
-              </div>
-           );
-      });
-      input = <div className ="form-group-checkbox">{input}
-      { props.errors[field.key] && <p className="error-text">{props.errors[field.key]}</p> }</div>;
-   }
+                        }
+                        if (field.type === "checkbox") {
+                            input = field.options.map((o) => {
+                                let checked = false;
+                                if (values[field.uniquekey] && values[field.uniquekey].length > 0) {
+                                    checked = values[field.uniquekey].indexOf(o.value) > -1 ? true : false;
+                                }
+                                return ( < div key = { field.uniquekey + o.uniquekey } >
+                                    <
+                                    input className = "form-input"
+                                    type = { field.type }
+                                    key = { o.uniquekey }
+                                    name = { o.uniquekey }
+                                    checked = { checked }
+                                    value = { o.value }
+                                    onChange = {
+                                        (e) => { handleChange(e, field.uniquekey, "multiple") }
+                                    }
+                                    /> <label> { o.label } </label > </div >
+                                );
+                            });
+                            input = < div className = "form-group-checkbox" > { input } {
+                                errors[field.uniquekey] && < p className = "error-text" > { errors[field.uniquekey] } </p> }</div > ;
+                            }
 
-    return (
-          <div key={'g' + field.key} className="form-group">
-              <label className="form-label"
-                  key={"l" + field.key}
-                  htmlFor={field.key}>
-                  {field.label}
-              </label>
-              {input}
-          </div>
-        )
-  });
-  return (
-    <>
-    <h1>{props.title}</h1>
-    <form onSubmit={props.onSubmit}>
-    {formUi}
-    {props.children ? props.children : (<div>
-      <button disabled={props.isSubmitting} type="submit">
-        Submit
-      </button>
-    </div>)}
-    </form>
-    </>
-  );
-}
- export default DynamicForms;
+                            return ( < div key = { 'g' + field.uniquekey }
+                                className = "form-group" >
+                                <
+                                label className = "form-label"
+                                key = { "l" + field.uniquekey }
+                                htmlFor = { field.uniquekey } > { field.label } </label> { input } </div >
+                            )
+                        });
+                return formUI;
+            }
+
+            return ( <>
+                <h1> { props.title } </h1> 
+                <form onSubmit = { handleSubmit } > { renderForm() } {
+                    props.children ? props.children : (<div>
+                        <button disabled = { isSubmitting }
+                        type = "submit">
+                        Submit </button> </div>)
+                }</form> </>
+            );
+        }
+        export default DynamicForms;
