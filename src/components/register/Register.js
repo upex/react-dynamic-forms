@@ -3,13 +3,12 @@ import React, { useState, useEffect } from "react";
 import DynamicForms from "../dynamicforms/DynamicForms";
 
 function Register() {
-
   const validateRules = {
     required: value => !!value || 'Required.',
     min: v => (v && v.length >= 6) || 'Enter password of minnimum 6 characters',
     emailValidate: v => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(v) || 'Invalid email address'
   }
-
+  const [defaultValues, setDefaultValues] = useState({city: 'Mumbai'})
   const [formModel, setFormModel] = useState([
       {
         uniquekey: 'email',
@@ -38,7 +37,7 @@ function Register() {
       ],
       rules: [validateRules.required]
       },
-      {uniquekey: "city",label:"City", type:"select", value: "Kerala", options: [
+      {uniquekey: "city",label:"City", type:"select", options: [
         {uniquekey:"mumbai",label:"Mumbai",value:"Mumbai"},
         {uniquekey:"bangalore",label:"Bangalore",value:"Bangalore"},
         {uniquekey:"kerala",label:"Kerala",value:"Kerala"},
@@ -73,14 +72,16 @@ function Register() {
           }
         );
         setFormModel(tmpModel);
+        setDefaultValues({...defaultValues, skills: ['reactjs'], email: 'upen@gmail.com', gender: 'male', username: 'alien'});
       });
   };
   return (
     <div className="container">
       <DynamicForms
       title="Register Here"
-      model={formModel}
-      registerUser={registerUser}
+      model={ formModel }
+      defaultValues= { defaultValues }
+      registerUser={ registerUser }
       />
     </div>
   );

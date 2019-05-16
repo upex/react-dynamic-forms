@@ -8,6 +8,10 @@ function useFormValidation(initialState, validate, callback, model) {
   const [isSubmitting, setSubmitting] = useState(false);
 
   useEffect(() => {
+    setValues(initialState);
+  }, [initialState]);
+
+  useEffect(() => {
     if (isSubmitting) {
       const noErrors = Object.keys(errors).length === 0;
       if (noErrors) {
@@ -18,6 +22,7 @@ function useFormValidation(initialState, validate, callback, model) {
       }
     }
   }, [errors]);
+
 
   function handleChange(event, key, type='single') {
     if (type === 'single') {

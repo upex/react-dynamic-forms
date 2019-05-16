@@ -11,27 +11,32 @@ import CheckboxField from "../checkbox/CheckboxField";
 
 function DynamicForms(props) {
     const [models, setModels] = useState(props.model || []);
-    const [INITIAL_STATE, setInitialState] = useState({})
+    const [INITIAL_STATE, setInitialState] = useState(props.defaultValues || {})
     const {
-      handleSubmit,
-      handleChange,
-      handleBlur,
-      values,
-      errors,
-      isSubmitting
-    } = useFormValidation(INITIAL_STATE, validateAuth, props.registerUser, models);
+        handleSubmit,
+        handleChange,
+        handleBlur,
+        values,
+        errors,
+        isSubmitting
+      } = useFormValidation(INITIAL_STATE, validateAuth, props.registerUser, models);
 
     useEffect(() => {
         setModels(props.model);
-        const tmpObj = {
-            ...INITIAL_STATE
-        }
-        models.forEach(item=> {
-            tmpObj[item.uniquekey] = '';
-        });
-        setInitialState({...tmpObj});
     }, [props.model])
-     
+
+    useEffect(() => {
+        let tmpvalues = {};
+        if(props.defaultValues && Object.keys(props.defaultValues).length) {
+            tmpvalues = props.defaultValues;
+        } else {
+            models.forEach(item=> {
+                tmpvalues[item.uniquekey] = '';
+            });
+        }
+        setInitialState({...INITIAL_STATE, ...tmpvalues});
+    }, [props.defaultValues]);
+
     function renderForm() {
         const formUI = models.map((field) => {
             const allProps = {
@@ -43,6 +48,7 @@ function DynamicForms(props) {
             };
             let input = <InputField
             key={field.uniquekey}
+            value={props.defaultValues[field.uniquekey]}
             { ...allProps }
             />
 
