@@ -14,9 +14,16 @@ function Register() {
       {
         uniquekey: 'email',
         type: 'email',
-        placeholder: 'Enter email',
         label: 'Email',
+        placeholder: 'Enter your email address',
         rules: [validateRules.required, validateRules.emailValidate]
+      },
+      {
+        uniquekey: 'notes',
+        type: 'textarea',
+        placeholder: 'Enter notes',
+        label: 'Notes',
+        rules: [validateRules.required]
       },
       {
         uniquekey: 'password',

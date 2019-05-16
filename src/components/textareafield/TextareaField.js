@@ -1,10 +1,9 @@
 import React from "react";
-import TextField from '@material-ui/core/TextField';
 
-function InputField(props) {
+function TextareaField(props) {
     return (
         <>
-        <TextField
+        <textarea
         onChange = {
             (e) => props.handleChange(e, props.uniquekey, 'single')
         }
@@ -12,18 +11,11 @@ function InputField(props) {
         name = { props.uniquekey }
         value = { props.values[props.uniquekey] ? props.values[props.uniquekey] : props.values[props.uniquekey] = '' }
         type = { props.type }
-        error
-        label = { props.label }
-        placeholder= {props.placeholder}
-        margin="normal"
-        variant="outlined"
-        fullWidth
-        InputLabelProps={{
-            shrink: true
-        }}
+        className = { props.errors[props.uniquekey] && "error-input" }
+        placeholder = { props.placeholder }
         />{props.errors[props.uniquekey] && < p className = "error-text" > { props.errors[props.uniquekey] } </p>}
         </>
     );
 }
 
-export default InputField;
+export default TextareaField;
