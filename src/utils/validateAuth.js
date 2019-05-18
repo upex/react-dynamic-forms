@@ -1,16 +1,22 @@
-export default function validateAuth(values) {
+export default function validateAuth(model, values) {
   let errors = {};
-  // Email Errors
-  if (!values.email) {
-    errors.email = "Required Email";
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
-    errors.email = "Invalid email address";
-  }
-  // Password Errors
-  if (!values.password) {
-    errors.password = "Required Password";
-  } else if (values.password.length < 6) {
-    errors.password = "Password must be at least 6 characters";
+  let val = '';
+  if (model && model.length) {
+    model.forEach(item=> {
+      if(item.rules && item.rules.length) {
+        for (let key in item.rules) {
+          val = values[item.uniquekey];
+          if ((item.type === 'checkbox' || (item.type === 'select' && item.multiple)) && values[item.uniquekey] && !values[item.uniquekey].length) {
+            val = '';
+          }
+          const check = item.rules[key](val);
+          if (check && typeof check === 'string') {
+            errors[item.uniquekey] = check;
+            break;
+          }
+        }
+      }
+    });
   }
   return errors;
 }
