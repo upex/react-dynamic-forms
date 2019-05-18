@@ -23,7 +23,6 @@ function useFormValidation(initialState, validate, callback, model) {
     }
   }, [errors]);
 
-
   function handleChange(event, key, type='single') {
     if (type === 'single') {
       setValues({
@@ -67,13 +66,19 @@ function useFormValidation(initialState, validate, callback, model) {
     setSubmitting(true);
   }
 
+  function resetForm(event) {
+    event.preventDefault();
+    setErrors({});
+  }
+
   return {
     handleSubmit,
     handleChange,
     handleBlur,
     values,
     errors,
-    isSubmitting
+    isSubmitting,
+    resetForm
   };
 
 }

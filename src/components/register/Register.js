@@ -1,6 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import DynamicForms from "../dynamicforms/DynamicForms";
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import Button from '@material-ui/core/Button';
 
 function Register() {
   const validateRules = {
@@ -8,14 +11,15 @@ function Register() {
     min: v => (v && v.length >= 6) || 'Enter password of minnimum 6 characters',
     emailValidate: v => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(v) || 'Invalid email address'
   }
-  const [defaultValues, setDefaultValues] = useState({city: 'Mumbai'})
+  const [defaultValues, setDefaultValues] = useState({city: ['Mumbai']})
   const [formModel, setFormModel] = useState([
       {
         uniquekey: 'email',
         type: 'email',
         label: 'Email',
         placeholder: 'Enter your email address',
-        rules: [validateRules.required, validateRules.emailValidate]
+        rules: [validateRules.required, validateRules.emailValidate],
+        helperText: 'Example helper text'
       },
       {
         uniquekey: 'notes',
@@ -37,7 +41,7 @@ function Register() {
       ],
       rules: [validateRules.required]
       },
-      {uniquekey: "city",label:"City", type:"select", options: [
+      {uniquekey: "city",label:"City", multiple:true, type:"select", options: [
         {uniquekey:"mumbai",label:"Mumbai",value:"Mumbai"},
         {uniquekey:"bangalore",label:"Bangalore",value:"Bangalore"},
         {uniquekey:"kerala",label:"Kerala",value:"Kerala"},
@@ -68,7 +72,8 @@ function Register() {
           {
             uniquekey: 'username',
             type: 'text',
-            placeholder: 'Enter username'
+            placeholder: 'Enter username here',
+            label: "Username"
           }
         );
         setFormModel(tmpModel);
@@ -76,14 +81,16 @@ function Register() {
       });
   };
   return (
-    <div className="container">
-      <DynamicForms
-      title="Register Here"
-      model={ formModel }
-      defaultValues= { defaultValues }
-      registerUser={ registerUser }
-      />
-    </div>
+      <Card>
+        <CardContent>
+          <DynamicForms
+          title="Register Here"
+          model={ formModel }
+          defaultValues= { defaultValues }
+          event={ registerUser }
+          />
+        </CardContent>
+      </Card>
   );
 }
 

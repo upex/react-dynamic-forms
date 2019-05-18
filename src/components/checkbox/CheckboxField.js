@@ -1,4 +1,9 @@
 import React from "react";
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormLabel from '@material-ui/core/FormLabel';
 
 function CheckboxField(props) {
     const checkboxes = props.options.map((o) => {
@@ -6,24 +11,39 @@ function CheckboxField(props) {
         if (props.values[props.uniquekey] && props.values[props.uniquekey].length > 0) {
             checked = props.values[props.uniquekey].indexOf(o.value) > -1 ? true : false;
         }
-        return ( <div key = { props.uniquekey + o.uniquekey } >
-            <input
-            type= { props.type }
+        return (
+            <FormControlLabel
             key= { o.uniquekey }
             name= { o.uniquekey }
-            checked= { checked }
-            value= { o.value }
-            onChange= {
-                (e) => { props.handleChange(e, props.uniquekey, "multiple") }
+            control={
+              <Checkbox
+                checked={checked}
+                onChange={
+                    (e) => { props.handleChange(e, props.uniquekey, "multiple") }
+                }
+                value={ o.value }
+                color="primary"
+              />
             }
-            /> <label> { o.label } </label>
-            </div>
+            label={ o.label }
+          />
         );
     });
+
+    function checkError() {
+        if(props.errors[props.uniquekey]) return true;
+        return false;
+    }
+
     return (
         <>
-        {checkboxes}
-        {props.errors[props.uniquekey] && <p className = "error-text" > { props.errors[props.uniquekey] } </p>}
+            <FormLabel component="legend">{props.label}</FormLabel>
+            <FormGroup row>
+            {checkboxes}
+            </FormGroup>
+            {checkError() && <FormHelperText>
+                    <span className="error-text">{props.errors[props.uniquekey]}</span>
+                </FormHelperText>}
         </>
     );
 }

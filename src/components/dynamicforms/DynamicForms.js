@@ -8,24 +8,45 @@ import TextAreaField from '../textareafield/TextareaField';
 import RadioField from "../radiofield/RadioField";
 import SelectField from "../selectfield/SelectField";
 import CheckboxField from "../checkbox/CheckboxField";
+import Grid from '@material-ui/core/Grid';
+import Badge from '@material-ui/core/Badge';
+import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
+import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
+
+const styles = theme => ({
+    margin: {
+        margin: 10,
+    },
+    padding: {
+        padding: '20px 20px 20px 0'
+    }
+});
 
 function DynamicForms(props) {
+    const { classes } = props;
     const [models, setModels] = useState(props.model || []);
-    const [INITIAL_STATE, setInitialState] = useState(props.defaultValues || {})
+    const [INITIAL_STATE, setInitialState] = useState({});
     const {
         handleSubmit,
         handleChange,
         handleBlur,
         values,
         errors,
-        isSubmitting
-      } = useFormValidation(INITIAL_STATE, validateAuth, props.registerUser, models);
+        isSubmitting,
+        resetForm
+      } = useFormValidation(INITIAL_STATE, validateAuth, props.event, models);
 
     useEffect(() => {
         setModels(props.model);
     }, [props.model])
 
     useEffect(() => {
+        getInitialValues();
+    }, [props.defaultValues]);
+
+    function getInitialValues() {
         let tmpvalues = {};
         if(props.defaultValues && Object.keys(props.defaultValues).length) {
             tmpvalues = props.defaultValues;
@@ -34,8 +55,13 @@ function DynamicForms(props) {
                 tmpvalues[item.uniquekey] = '';
             });
         }
-        setInitialState({...INITIAL_STATE, ...tmpvalues});
-    }, [props.defaultValues]);
+        setInitialState({...tmpvalues});
+    }
+
+    function resetErrorForm(e) {
+        getInitialValues();
+        resetForm(e);
+    }
 
     function renderForm() {
         const formUI = models.map((field) => {
@@ -48,7 +74,6 @@ function DynamicForms(props) {
             };
             let input = <InputField
             key={field.uniquekey}
-            value={props.defaultValues[field.uniquekey]}
             { ...allProps }
             />
 
@@ -78,27 +103,74 @@ function DynamicForms(props) {
             }
 
             return (
-                <div key = {'g' + field.uniquekey}>
+                <Grid key={field.uniquekey} item xs={12} sm={6}>
                 { input }
-                </div >
+                </Grid>
             )
         });
         return formUI;
     }
-
+    function checkError() {
+        if(Object.keys(errors).length) return true;
+        return false;
+    }
     return (
         <>
-            <h1> { props.title } </h1> 
             <form onSubmit = { handleSubmit } noValidate autoComplete="off">
-            { renderForm() }
-            {
-                props.children ? props.children : (<div>
-                    <button disabled = { isSubmitting }
-                    type = "submit">
-                    Submit </button> </div>)
-            }
+                <Grid
+                    container
+                    justify="center"
+                    alignItems="center"
+                    direction="row">
+                    <h2> { props.title } </h2> 
+                </Grid>
+                <Grid
+                container
+                spacing={32}
+                className={classes.padding}
+                >
+                { renderForm() }
+                <Grid item xs={12}>
+                <Divider/>
+                    <Grid
+                    container
+                    justify="center"
+                    alignItems="center"
+                    direction="row"
+                    className={classes.padding}>
+                    <Button
+                    variant="contained"
+                    size="large"
+                    onClick= { (e) => resetErrorForm(e) }
+                    className={classes.margin}>
+                    Reset
+                    </Button>
+                        {
+                            props.children ? props.children : (<Badge
+                                color={Object.keys(errors).length ? 'secondary' : 'primary'}
+                                badgeContent={Object.keys(errors).length ? Object.keys(errors).length : 0}>
+                                    <Button
+                                    size="large" 
+                                    color="primary"
+                                    disabled= { isSubmitting || checkError() }
+                                    type= "submit"
+                                    variant="contained"
+                                    className={classes.margin}
+                                    >
+                                    Submit
+                                    </Button>
+                                </Badge>)
+                        }
+                    </Grid>
+                </Grid>
+                </Grid>
             </form>
         </>
     );
 }
-export default DynamicForms;
+
+DynamicForms.propTypes = {
+    classes: PropTypes.object.isRequired,
+  };
+  
+  export default withStyles(styles)(DynamicForms);
