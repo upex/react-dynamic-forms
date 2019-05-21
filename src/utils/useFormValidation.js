@@ -29,6 +29,12 @@ function useFormValidation(initialState, validate, callback, model) {
         ...values,
         [key]: event.target.value
       });
+    } else if (type === 'switch') {
+      const val = event.target.checked ? event.target.value : '';
+      setValues({
+        ...values,
+        [key]: val
+      });
     } else {
       // Array of values (e.g. checkbox)
       let found = values[key] ?  
