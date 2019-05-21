@@ -15,6 +15,7 @@ import TextAreaField from '../../components/textareafield/TextareaField';
 import RadioField from "../../components/radiofield/RadioField";
 import SelectField from "../../components/selectfield/SelectField";
 import CheckboxField from "../../components/checkbox/CheckboxField";
+import SwitchInput from "../../components/switch/Switch";
 import ButtonComp from "../../components/button/Button";
 
 const styles = theme => ({
@@ -126,7 +127,6 @@ function DynamicForms(props) {
           .filter(e => arr[e]).map(e => arr[e]);
          return unique;
     }
-
     function renderForm() {
         const uniqueSetMapped = getUnique(models, 'uniquekey');
         const formUI = uniqueSetMapped.map((field) => {
@@ -162,6 +162,12 @@ function DynamicForms(props) {
             }
             if (field.type === "checkbox") {
                 input = <CheckboxField
+                key={field.uniquekey}
+                { ...allProps }
+                />
+            }
+            if(field.type === "switch") {
+                input = <SwitchInput
                 key={field.uniquekey}
                 { ...allProps }
                 />

@@ -15,6 +15,13 @@ function Register() {
   const [defaultValues, setDefaultValues] = useState({city: ['Mumbai']})
   const [mappedModel, setMappedModel] = useState([
     {
+      uniquekey: 'switchmapped',
+      type: 'text',
+      label: 'Swicth label',
+      placeholder: 'Enter your swicth',
+      rules: [validateRules.required, validateRules.emailValidate]
+    },
+    {
       uniquekey: 'homeemail',
       type: 'email',
       label: 'On radio male check/ on mumbai select',
@@ -51,6 +58,17 @@ function Register() {
     }
   ])
   const [formModel, setFormModel] = useState([
+      {
+        uniquekey: 'switchkey',
+        type: 'switch',
+        label: 'Switch label',
+        value: 'myValue',
+        rules: [],
+        trigger: [{
+          value: 'myValue',
+          fields: ['switchmapped']
+        }]
+      },
       {
         uniquekey: 'email',
         type: 'email',
