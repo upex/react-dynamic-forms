@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -9,6 +10,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import ListItemText from '@material-ui/core/ListItemText';
 
 function SelectField(props) {
+
     const options = props.options.map((o) => {
         let selectOptopn = o.value
         if (props.multiple) {
@@ -19,7 +21,7 @@ function SelectField(props) {
         <MenuItem
             key = { o.uniquekey }
             value = { o.value } >
-             {selectOptopn}
+                {selectOptopn}
             </MenuItem>
         );
     });
@@ -28,6 +30,17 @@ function SelectField(props) {
         if(props.errors[props.uniquekey]) return true;
         return false;
     }
+    
+    /* function handleSearch(e) {
+        e.preventDefault();
+        setQuery(e.target.value);
+        let options = INIT_OPTIONS;
+        let q = e && e.target.value ? e.target.value.toLowerCase() : '';
+        options = options.filter((o) => {
+          return o.label.toLowerCase().indexOf(q) !== -1;
+        });
+        setFilteredOptions(options);
+    } */
 
     return (
         <>

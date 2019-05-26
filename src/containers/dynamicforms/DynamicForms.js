@@ -16,6 +16,7 @@ import RadioField from "../../components/radiofield/RadioField";
 import SelectField from "../../components/selectfield/SelectField";
 import CheckboxField from "../../components/checkbox/CheckboxField";
 import SwitchInput from "../../components/switch/Switch";
+import AutoComplete from "../../components/autocomplete/Autocomplete";
 import ButtonComp from "../../components/button/Button";
 
 const styles = theme => ({
@@ -168,6 +169,12 @@ function DynamicForms(props) {
             }
             if(field.type === "switch") {
                 input = <SwitchInput
+                key={field.uniquekey}
+                { ...allProps }
+                />
+            }
+            if(field.type === "autocomplete") {
+                input = <AutoComplete
                 key={field.uniquekey}
                 { ...allProps }
                 />

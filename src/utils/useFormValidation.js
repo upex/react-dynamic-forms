@@ -29,6 +29,11 @@ function useFormValidation(initialState, validate, callback, model) {
         ...values,
         [key]: event.target.value
       });
+    } else if (type === 'autocomplete') {
+      setValues({
+        ...values,
+        [key]: event
+      });
     } else if (type === 'switch') {
       const val = event.target.checked ? event.target.value : '';
       setValues({
