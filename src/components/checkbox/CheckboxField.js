@@ -22,7 +22,8 @@ function CheckboxField(props) {
                     (e) => { props.handleChange(e, props.uniquekey, "multiple") }
                 }
                 value={ o.value }
-                color="primary"
+                color={props.color || 'primary'}
+                disabled= {props.disabled}
               />
             }
             label={ o.label }
@@ -48,4 +49,4 @@ function CheckboxField(props) {
     );
 }
 
-export default CheckboxField;
+export default React.memo(CheckboxField);

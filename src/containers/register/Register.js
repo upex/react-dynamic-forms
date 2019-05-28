@@ -4,14 +4,14 @@ import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import CardContent from '@material-ui/core/CardContent';
 import DynamicForms from "../dynamicforms/DynamicForms";
-import ButtonComp from "../../components/button/Button";
+import validateRules from '../../utils/validateRules';
 
 function Register() {
-  const validateRules = {
-    required: value => !!value || 'Required.',
-    min: v => (v && v.length >= 6) || 'Enter password of minnimum 6 characters',
-    emailValidate: v => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(v) || 'Invalid email address'
-  }
+  const {
+    required,
+    min,
+    emailValidate
+  } = validateRules();
   const [defaultValues, setDefaultValues] = useState({city: ['Mumbai']})
   const [mappedModel, setMappedModel] = useState([
     {
@@ -19,42 +19,42 @@ function Register() {
       type: 'text',
       label: 'Swicth label',
       placeholder: 'Enter your swicth',
-      rules: [validateRules.required, validateRules.emailValidate]
+      rules: [required, emailValidate]
     },
     {
       uniquekey: 'homeemail',
       type: 'email',
       label: 'On radio male check/ on mumbai select',
       placeholder: 'Enter your home email address',
-      rules: [validateRules.required, validateRules.emailValidate]
+      rules: [required, emailValidate]
     },
     {
       uniquekey: 'lifenotes',
       type: 'textarea',
       placeholder: 'Enter your life notes',
       label: 'On Gender female selection',
-      rules: [validateRules.required]
+      rules: [required]
     },
     {
       uniquekey: 'angularfield',
       type: 'text',
       placeholder: 'On angular check',
       label: 'Angular check',
-      rules: [validateRules.required]
+      rules: [required]
     },
     {
       uniquekey: 'checkbox1',
       type: 'text',
       placeholder: 'Bangalore',
       label: 'on Bangalore city selection',
-      rules: [validateRules.required]
+      rules: [required]
     },
     {
       uniquekey: 'checkbox2',
       type: 'text',
       placeholder: 'reactjs selection',
       label: 'Checkbox reactjs',
-      rules: [validateRules.required]
+      rules: [required]
     }
   ])
   const [formModel, setFormModel] = useState([
@@ -64,7 +64,7 @@ function Register() {
         label: 'Autocomplete label',
         multiple: true,
         placeholder: 'Search your country here..',
-        rules: [validateRules.required],
+        rules: [required],
         options: [
           { label: 'Afghanistan' },
           { label: 'Aland Islands' },
@@ -121,27 +121,27 @@ function Register() {
         type: 'email',
         label: 'Email',
         placeholder: 'Enter your email address',
-        rules: [validateRules.required, validateRules.emailValidate]
+        rules: [required, emailValidate]
       },
       {
         uniquekey: 'notes',
         type: 'textarea',
         placeholder: 'Enter notes',
         label: 'Notes',
-        rules: [validateRules.required]
+        rules: [required]
       },
       {
         uniquekey: 'password',
         type: 'password',
         placeholder: 'Enter password of minnimum 6 characters',
         label: 'Password',
-        rules: [validateRules.required, validateRules.min]
+        rules: [required, min]
       },
       {uniquekey: "gender",label: "Gender", type:"radio",options:[
         {uniquekey:"male",label:"Male",name:"gender",value:"male"},
         {uniquekey:"female",label:"Female",name: "gender",value:"female"},
       ],
-      rules: [validateRules.required],
+      rules: [required],
       trigger: [{
           value: 'male',
           fields: ['homeemail']
@@ -155,7 +155,7 @@ function Register() {
         {uniquekey:"bangalore",label:"Bangalore",value:"Bangalore"},
         {uniquekey:"kerala",label:"Kerala",value:"Kerala"},
       ],
-      rules: [validateRules.required],
+      rules: [required],
       trigger: [{
         value: 'Mumbai',
         fields: ['homeemail']
@@ -169,7 +169,7 @@ function Register() {
         {uniquekey:"angular",label:"Angular",value:"angular"},
         {uniquekey:"vuejs",label:"VueJS",value:"vuejs"},
       ], 
-      rules: [validateRules.required],
+      rules: [required],
       trigger: [{
         value: 'reactjs',
         fields: ['checkbox2']
@@ -224,20 +224,19 @@ function Register() {
       <CardContent>
       <DynamicForms
       title="Register Here"
+      buttonSetting= {
+        {
+          showReset: true,
+          resetLabel: 'Clear',
+          showSubmit: true,
+          submitLabel: 'Register'
+        }
+      }
       model={ formModel }
       mappedModel = { mappedModel }
       defaultValues= { defaultValues }
       event={ registerUser }
-      >
-      <ButtonComp
-      size="large" 
-      color="primary"
-      type= "submit"
-      variant="contained"
-      label="Register"
-      show={true}
       />
-      </DynamicForms>
       </CardContent>
     </Card>
     </Grid>

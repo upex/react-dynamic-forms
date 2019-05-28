@@ -13,7 +13,8 @@ function SwitchInput(props) {
                                 (e) => { props.handleChange(e, props.uniquekey, 'switch') }
                             }
                             value={props.value}
-                            color="primary"
+                            color={props.color || 'primary'}
+                            disabled={props.disabled}
                         />
                         }
                         label={props.label}
@@ -36,4 +37,4 @@ function SwitchInput(props) {
     );
 }
 
-export default SwitchInput;
+export default React.memo(SwitchInput);

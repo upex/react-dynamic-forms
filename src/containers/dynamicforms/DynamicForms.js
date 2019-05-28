@@ -88,6 +88,7 @@ function DynamicForms(props) {
         getInitialValues();
         resetForm(e);
     }
+
     function showDynamicFields() {
         let originalModel = [...props.model];
         props.model.forEach(item=> {
@@ -111,6 +112,7 @@ function DynamicForms(props) {
         });
         setModels(originalModel);
     }
+
     function hiddenFieldProcess(arr, fields, value) {
         const index = arr.findIndex(i => i.uniquekey === value);
         const firstHalf = arr.slice(0, index + 1);
@@ -119,6 +121,7 @@ function DynamicForms(props) {
             v => fields.includes(v.uniquekey));
         return [...firstHalf, ...getMappedFields, ...lastHalf];
     }
+
     function getUnique(arr, comp) {
         const unique = arr
              .map(e => e[comp])
@@ -128,6 +131,7 @@ function DynamicForms(props) {
           .filter(e => arr[e]).map(e => arr[e]);
          return unique;
     }
+
     function renderForm() {
         const uniqueSetMapped = getUnique(models, 'uniquekey');
         const formUI = uniqueSetMapped.map((field) => {
@@ -190,10 +194,7 @@ function DynamicForms(props) {
         });
         return formUI;
     }
-    function checkError() {
-        if(Object.keys(errors).length) return true;
-        return false;
-    }
+
     return (
         <>
             <form onSubmit = { handleSubmit } noValidate autoComplete="off">
@@ -224,7 +225,8 @@ function DynamicForms(props) {
                     size="large"
                     onClick= { (e) => resetErrorForm(e) }
                     className={classes.marginRight}
-                    label="Reset"
+                    label={props.buttonSetting.resetLabel || "Reset"}
+                    show={props.buttonSetting.showReset}
                     />
                     <Badge
                     color={Object.keys(errors).length ? 'secondary' : 'primary'}
@@ -233,11 +235,11 @@ function DynamicForms(props) {
                             props.children ? props.children : (<ButtonComp
                             size="large" 
                             color="primary"
-                            disabled= { isSubmitting || checkError() }
+                            disabled= { isSubmitting || props.loading }
                             type= "submit"
                             variant="contained"
-                            label="Login"
-                            show={true}
+                            label={props.buttonSetting.submitLabel || "Submit"}
+                            show={props.buttonSetting.showSubmit}
                             fullWidth={true}
                             />)
                         }
@@ -257,4 +259,4 @@ DynamicForms.propTypes = {
     classes: PropTypes.object.isRequired,
   };
   
-  export default withStyles(styles)(DynamicForms);
+  export default React.memo(withStyles(styles)(DynamicForms));

@@ -20,4 +20,4 @@ function ButtonComponent(props) {
     );
 }
 
-export default ButtonComponent;
+export default React.memo(ButtonComponent);

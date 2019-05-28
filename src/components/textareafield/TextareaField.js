@@ -22,8 +22,9 @@ function TextareaField(props) {
             className = { props.className }
             label={ props.label }
             placeholder = { props.placeholder }
+            disabled={ props.disabled }
             margin="normal"
-            variant="outlined"
+            variant={ props.variant || 'outlined' }
             helperText={!checkError() && props.helperText}
             fullWidth
             InputLabelProps={{
@@ -37,4 +38,4 @@ function TextareaField(props) {
     );
 }
 
-export default TextareaField;
+export default React.memo(TextareaField);
