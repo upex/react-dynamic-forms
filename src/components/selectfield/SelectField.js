@@ -47,6 +47,7 @@ function SelectField(props) {
         <FormControl fullWidth>
         <InputLabel htmlFor={props.uniquekey}> {props.label}</InputLabel>
         <Select
+            disabled={props.disabled}
             multiple={props.multiple}
             value = { props.values[props.uniquekey]
                 ? props.values[props.uniquekey] : props.values[props.uniquekey] = props.multiple ? [] : '' }
@@ -73,4 +74,4 @@ function SelectField(props) {
     );
 }
 
-export default SelectField;
+export default React.memo(SelectField);

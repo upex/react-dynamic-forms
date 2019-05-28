@@ -207,6 +207,7 @@ function IntegrationReactSelect(props) {
             }
             placeholder={props.placeholder}
             isMulti={props.multiple}
+            isDisabled={props.disabled}
           />
         {checkError() && <FormHelperText>
             <span className="error-text">{props.errors[props.uniquekey]}</span>
@@ -215,9 +216,9 @@ function IntegrationReactSelect(props) {
     );
  }
 
-IntegrationReactSelect.propTypes = {
+ IntegrationReactSelect.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(IntegrationReactSelect);
+export default React.memo(withStyles(styles, { withTheme: true })(IntegrationReactSelect));

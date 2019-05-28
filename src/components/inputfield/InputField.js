@@ -8,7 +8,6 @@ function InputField(props) {
         if(props.errors[props.uniquekey]) return true;
         return false;
     }
-
     return (
         <>
         <TextField
@@ -23,8 +22,9 @@ function InputField(props) {
             label = { props.label }
             placeholder= {props.placeholder}
             className = { props.className }
+            disabled= { props.disabled }
             margin="normal"
-            variant="outlined"
+            variant={ props.disabled || 'outlined' }
             fullWidth
             helperText={!checkError() && props.helperText}
             InputLabelProps={{
@@ -38,4 +38,4 @@ function InputField(props) {
     );
 }
 
-export default InputField;
+export default React.memo(InputField);

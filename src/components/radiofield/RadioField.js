@@ -12,7 +12,7 @@ function RadioField(props) {
             <FormControlLabel
                 key={o.uniquekey}
                 value={ o.value }
-                control={<Radio color="primary" />}
+                control={<Radio disabled={props.disabled} color={props.disabled || 'primary'} />}
                 label={o.label}
                 labelPlacement="end"
             />
@@ -47,4 +47,4 @@ function RadioField(props) {
     );
 }
 
-export default RadioField;
+export default React.memo(RadioField);
